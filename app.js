@@ -28,7 +28,7 @@ app.listen(port, () => {
     console.log("Server running on port " + port)
 })
 
-cron.schedule("*/10 * * * *", function(){
+cron.schedule("0 * * * *", function(){
     console.log("Running job")
     main()
 })
@@ -51,8 +51,8 @@ async function main(){
 async function publishDolar(name, endpoint){
     try {
         const data  = await getDolarInfo(endpoint)
-        const date = moment(data.fecha.substr(0, 16)).format("DD/MM/YYYY")
-        const tweet = name + "\n" + "\n" + "FECHA: " + date + "\n" + "COMPRA: " + data.compra + "\n" + "VENTA: " + data.venta + "\n" + "\n" + "#dolar #dolarinfo #dolarblue #riesgopais #argentina #economia"
+        const date = moment(data.fecha.substr(0, 16)).format("DD/MM/YYYY hh:mm")
+        const tweet = "📆 FECHA: " + date  + "\n" + "\n" + "💸 " + name + "\n" + "\n" +  "\n" + "COMPRA: " + data.compra + "\n" + "VENTA: " + data.venta + "\n" + "\n" + "#dolar #dolarinfo #dolarblue #riesgopais #argentina #economia"
         await postTweet(tweet)
     }
     catch (e) {
@@ -64,15 +64,13 @@ async function publishRiesgoPais(){
     try {
         const data = await getRiesgoPais()
         const date = moment(data.fecha.substr(0, 16)).format("DD/MM/YYYY")
-        const tweet = "RIESGO PAIS" + "\n" + "\n" + "FECHA: " + date + "\n" + "PUNTOS: " + data.valor + "\n" + "#dolar #dolarinfo #dolarblue #riesgopais #argentina #economia"
+        const tweet = "📆 FECHA: " + date + "\n" + "\n" + "🇦🇷 " + "RIESGO PAIS" + "\n" + "💣 " + "PUNTOS: " + data.valor + "\n" + "\n" + "#dolar #dolarinfo #dolarblue #riesgopais #argentina #economia"
         await postTweet(tweet)
     } 
     catch (e) {
         console.log(e)    
     }
 }
-
-
 
 async function getDolarInfo(endpoint){
     try {
