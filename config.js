@@ -6,6 +6,7 @@ if (dotenv.error && dotenv.error.code == 'ENOENT') {
 
 module.exports = {
   //  CONFIG VARIABLES
+  PORT: process.env.PORT,
   API_KEY: process.env.API_KEY,
   API_SECRET_KEY: process.env.API_SECRET_KEY,
   BEARER_TOKEN: process.env.BEARER_TOKEN,

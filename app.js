@@ -1,8 +1,11 @@
+const express = require('express')
+const app = express();
 const config = require('./config')
 const Twitter = require('twitter')
 const axios = require('axios')
 const cron = require("node-cron")
 const moment = require('moment')
+const port = 8080 || process.env.PORT
 
 const client = new Twitter({
     consumer_key:     config.API_KEY,
@@ -13,6 +16,17 @@ const client = new Twitter({
 
 const type = ['Dolar Oficial', 'Dolar Promedio', 'Dolar Blue', 'Dolar Bolsa', 'Contado con liqui']
 const endpoint = ['dolaroficial', 'dolarpromedio', 'dolarblue', 'dolarbolsa', 'contadoliqui']
+
+
+app.set('port', port)
+
+app.get('/', (req, res) => {
+    res.send('Twitter bot running.' + '<br><br>' + 'For more information please visit ' + '<a href="https://twitter.com/dolar_live">https://twitter.com/dolar_live</a>' + '<br><br>' + 'Powered by Ramiro Castrogiovanni') 
+})
+
+app.listen(port, () => {
+    console.log("Server running on port " + port)
+})
 
 cron.schedule("0 */4 * * *", function(){
     console.log("Running job")
