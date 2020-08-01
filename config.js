@@ -1,7 +1,7 @@
 const dotenv = require('dotenv').config();
 
 if (dotenv.error && dotenv.error.code == 'ENOENT') {
-  throw 'Falta archivo .env';
+  console.log('Falta archivo .env!')
 }
 
 module.exports = {
