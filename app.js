@@ -1,6 +1,7 @@
 const config = require('./config')
 const Twitter = require('twitter')
 const axios = require('axios')
+const moment = require('moment')
 
 const client = new Twitter({
     consumer_key:     config.API_KEY,
@@ -12,26 +13,63 @@ const client = new Twitter({
 const type = ['Dolar Oficial', 'Dolar Promedio', 'Dolar Blue', 'Dolar Bolsa', 'Contado con liqui']
 const endpoint = ['dolaroficial', 'dolarpromedio', 'dolarblue', 'dolarbolsa', 'contadoliqui']
 
-for (let i = 0; i < type.length; i++) {
-    main(type[i], endpoint[i])
+main()
+
+async function main(){
+    try {
+        for (let i = 0; i < type.length; i++) {
+            publishDolar(type[i], endpoint[i])
+            if (i == type.length - 1){
+                publishRiesgoPais()
+            }
+        }
+        console.log('Tweets publicados exitosamente')
+    }
+    catch (e) {
+        console.log(e)
+    }
 }
 
-async function main(name, endpoint){
+async function publishDolar(name, endpoint){
     try {
         const data  = await getDolarInfo(endpoint)
-        const tweet = name + "\n" + "FECHA: " + data.fecha + "\n" + "COMPRA: " + data.compra + "\n" + "VENTA: " + data.venta + "\n" + "#dolar #dolarinfo #dolarblue #argentina #economia"
-        console.log(tweet)
-        //await postTweet(tweet)
+        const date = moment(data.fecha.substr(0, 16)).format("DD/MM/YYYY")
+        const tweet = name + "\n" + "FECHA: " + date + "\n" + "COMPRA: " + data.compra + "\n" + "VENTA: " + data.venta + "\n" + "#dolar #dolarinfo #dolarblue #riesgopais #argentina #economia"
+        await postTweet(tweet)
     }
     catch (e) {
        console.log(e) 
     }
 }
 
+async function publishRiesgoPais(){
+    try {
+        const data = await getRiesgoPais()
+        const date = moment(data.fecha.substr(0, 16)).format("DD/MM/YYYY")
+        const tweet = "RIESGO PAIS" + "\n" + "FECHA: " + date + "\n" + "PUNTOS: " + data.valor + "\n" + "#dolar #dolarinfo #dolarblue #riesgopais #argentina #economia"
+        await postTweet(tweet)
+    } 
+    catch (e) {
+        console.log(e)    
+    }
+}
+
+
+
 async function getDolarInfo(endpoint){
     try {
        const res = await axios.get('https://api-dolar-argentina.herokuapp.com/api/' + endpoint)
        return res.data
+    }
+    catch (e) {
+        console.log(e)
+    }
+}
+
+async function getRiesgoPais(){
+    try {
+        const res = await axios.get('https://api-dolar-argentina.herokuapp.com/api/riesgopais')
+        return res.data
     }
     catch (e) {
         console.log(e)
