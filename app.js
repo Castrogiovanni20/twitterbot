@@ -1,6 +1,7 @@
 const config = require('./config')
 const Twitter = require('twitter')
 const axios = require('axios')
+const cron = require("node-cron")
 const moment = require('moment')
 
 const client = new Twitter({
@@ -13,7 +14,10 @@ const client = new Twitter({
 const type = ['Dolar Oficial', 'Dolar Promedio', 'Dolar Blue', 'Dolar Bolsa', 'Contado con liqui']
 const endpoint = ['dolaroficial', 'dolarpromedio', 'dolarblue', 'dolarbolsa', 'contadoliqui']
 
-main()
+cron.schedule("0 */4 * * *", function(){
+    console.log("Running job")
+    main()
+})
 
 async function main(){
     try {
@@ -34,7 +38,7 @@ async function publishDolar(name, endpoint){
     try {
         const data  = await getDolarInfo(endpoint)
         const date = moment(data.fecha.substr(0, 16)).format("DD/MM/YYYY")
-        const tweet = name + "\n" + "FECHA: " + date + "\n" + "COMPRA: " + data.compra + "\n" + "VENTA: " + data.venta + "\n" + "#dolar #dolarinfo #dolarblue #riesgopais #argentina #economia"
+        const tweet = name + "\n" + "\n" + "FECHA: " + date + "\n" + "COMPRA: " + data.compra + "\n" + "VENTA: " + data.venta + "\n" + "\n" + "#dolar #dolarinfo #dolarblue #riesgopais #argentina #economia"
         await postTweet(tweet)
     }
     catch (e) {
@@ -46,7 +50,7 @@ async function publishRiesgoPais(){
     try {
         const data = await getRiesgoPais()
         const date = moment(data.fecha.substr(0, 16)).format("DD/MM/YYYY")
-        const tweet = "RIESGO PAIS" + "\n" + "FECHA: " + date + "\n" + "PUNTOS: " + data.valor + "\n" + "#dolar #dolarinfo #dolarblue #riesgopais #argentina #economia"
+        const tweet = "RIESGO PAIS" + "\n" + "\n" + "FECHA: " + date + "\n" + "PUNTOS: " + data.valor + "\n" + "#dolar #dolarinfo #dolarblue #riesgopais #argentina #economia"
         await postTweet(tweet)
     } 
     catch (e) {
