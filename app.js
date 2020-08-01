@@ -5,7 +5,7 @@ const Twitter = require('twitter')
 const axios = require('axios')
 const cron = require("node-cron")
 const moment = require('moment')
-const port = config.port || 8080 
+const port = config.PORT || 8080 
 
 const client = new Twitter({
     consumer_key:     config.API_KEY,
