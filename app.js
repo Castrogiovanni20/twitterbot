@@ -28,7 +28,7 @@ app.listen(port, () => {
     console.log("Server running on port " + port)
 })
 
-cron.schedule("0 * * * *", function(){
+cron.schedule("*/10 * * * *", function(){
     console.log("Running job")
     main()
 })
@@ -63,7 +63,7 @@ async function publishDolar(name, endpoint){
 async function publishRiesgoPais(){
     try {
         const data = await getRiesgoPais()
-        const date = moment(data.fecha.substr(0, 16)).format("DD/MM/YYYY")
+        const date = moment(data.fecha.substr(0, 16)).format("DD/MM/YYYY hh:mm")
         const tweet = "📆 FECHA: " + date + "\n" + "\n" + "🇦🇷 " + "RIESGO PAIS" + "\n" + "💣 " + "PUNTOS: " + data.valor + "\n" + "\n" + "#dolar #dolarinfo #dolarblue #riesgopais #argentina #economia"
         await postTweet(tweet)
     } 
