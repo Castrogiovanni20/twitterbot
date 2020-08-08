@@ -28,7 +28,7 @@ app.listen(port, () => {
     console.log("Server running on port " + port)
 })
 
-cron.schedule("*/10 * * * *", function(){
+cron.schedule("0 * * * *", function(){
     console.log("Running job")
     main()
 })
